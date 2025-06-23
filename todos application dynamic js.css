@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9fbfe;
+}
+
+.todos-bg-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.todos-heading {
+    text-align: center;
+    font-size: 46px;
+    font-weight: 500;
+}
+
+.create-task-heading,
+.todo-items-heading {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.create-task-heading-subpart,
+.todo-items-heading-subpart {
+    font-weight: 500;
+}
+
+.todo-user-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #e4e7eb;
+    margin-top: 10px;
+}
+
+.button {
+    background-color: #4c63b6;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.todo-item-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    background: #e6f6ff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.checkbox-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.checked {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.delete-icon {
+    margin-left: auto;
+    color: red;
+    cursor: pointer;
+}
