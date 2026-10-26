@@ -6,7 +6,7 @@
 
 > Production-ready task manager built with vanilla JavaScript, demonstrating DOM manipulation, Local Storage API, and event-driven architecture.
 
-**[🚀 Live Demo](https://aditodosapp.ccbp.tech)**
+**[🚀 Live Demo](https://teamtaskflow.ccbp.tech/)**
 
 ---
 
