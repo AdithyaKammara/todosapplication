@@ -13,6 +13,10 @@ import { toast } from '../ui/toast.js';
 import { emit } from './events.js';
 import { createHistory } from './history.js';
 import { readPref, storage } from './storage.js';
+import { cloudEnabled } from '../backend/env.js';
+
+// decided before the first load, so a signed-out cloud visitor never sees this browser's local data
+storage.cloud = cloudEnabled();
 
 const savedView = readPref(KEYS.view);
 
@@ -42,6 +46,7 @@ let saveWarned = false;
 /** Save to storage and record an undo step. Warns once if the browser refuses to save. */
 export function persist() {
   history.record(JSON.stringify(store.state));
+  emit('saved', store.state);
   if (storage.save(store.state)) {
     saveWarned = false;
   } else if (!saveWarned) {
@@ -72,6 +77,7 @@ function applySnapshot(snapshot) {
     store.ui.project = '';
   }
   storage.save(store.state);
+  emit('saved', store.state);
   emit('drawer:rebuild');
   render();
 }
@@ -95,5 +101,33 @@ export function reloadFromStorage() {
   store.state = storage.load();
   history.reset(JSON.stringify(store.state));
   emit('drawer:rebuild');
+  render();
+}
+
+/** A whole new document arrived (signed in, switched workspace): show it with a fresh history. */
+export function replaceAll(data) {
+  store.state = normalize(data);
+  history.reset(JSON.stringify(store.state));
+  store.ui.selected.clear();
+  store.ui.project = '';
+  emit('drawer:rebuild');
+  render();
+}
+
+/**
+ * A teammate changed something. `change(state)` edits `store.state` in place; the result becomes the
+ * current snapshot without an undo step of its own, and is not sent back to the server.
+ */
+export function applyRemote(change) {
+  change(store.state);
+  store.state = normalize(store.state);
+  history.sync(JSON.stringify(store.state));
+  for (const id of [...store.ui.selected]) {
+    if (!store.state.tasks.some((t) => t.id === id)) store.ui.selected.delete(id);
+  }
+  if (store.ui.project && !store.state.projects.some((p) => p.id === store.ui.project)) {
+    store.ui.project = '';
+  }
+  emit('drawer:remote');
   render();
 }

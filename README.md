@@ -19,6 +19,7 @@ It has a dashboard, list, kanban board and calendar, plus the details that make 
 - **Views**: list with sorting and filters, drag-and-drop board, month calendar.
 - **Task drawer**: status, priority, assignee, due date, tags, description, subtasks, comments and an activity log.
 - **Productivity**: undo/redo (50 steps), bulk move/assign/delete, command palette (`Ctrl K`), "What next?" ranking, focus timer.
+- **Accounts and teams** (optional, with Supabase): email + password sign-in, password reset, workspaces, invite links, real teammates as assignees and live sync of every change. Setup: [docs/SUPABASE.md](docs/SUPABASE.md).
 - **Data**: JSON backup and restore, CSV export (guarded against spreadsheet formula injection), data saved in the browser.
 - **Quality**: keyboard accessible, visible focus, reduced-motion support, responsive down to phones, light and dark themes, compact density option.
 
@@ -41,12 +42,14 @@ css/        tokens, base, layout, components, views, dialogs (+ self-hosted font
 src/
   main.js         wires everything together
   config.js       constants (statuses, priorities, demo team, limits)
-  model/          pure logic: sanitising data, quick-add parser, selectors
+  backend/        Supabase client, accounts, workspaces and live sync (cloud mode only)
+  model/          pure logic: sanitising data, quick-add parser, selectors, row diffing
   store/          state, history (undo/redo), storage, actions
   views/          dashboard, list, board, calendar, charts, app chrome
   ui/             drawer, dialogs, palette, shortcuts, bulk edit, theme, toast
   features/       sample data, import/export
   utils/          dates, text, DOM builder, CSV
+supabase/         schema.sql: tables, Row Level Security and the invite function
 tests/            unit tests for the pure logic
 scripts/serve.mjs static dev server
 ```
@@ -71,13 +74,13 @@ GitHub Actions runs `check` on every push (`.github/workflows/ci.yml`) and can p
 
 ## Honest notes
 
-- The team (five people) is demo data. There are no accounts yet, and data lives only in your browser.
+- Out of the box the app runs in local mode: the team (five people) is demo data and tasks live only in your browser. Fill in `src/backend/env.js` to switch on accounts and team sync (see [docs/SUPABASE.md](docs/SUPABASE.md)).
 - This is version one of a larger plan.
 
 ## Roadmap
 
 1. **Now:** polished frontend, tests, CI, deployed demo.
-2. **Next:** Node + Express + PostgreSQL API, authentication, roles and permissions, Docker.
+2. **Next:** accounts, workspaces and live team sync on Supabase (done, optional); roles beyond owner/member.
 3. **Later:** real-time updates, notifications, audit log, reporting.
 
 ## Credits

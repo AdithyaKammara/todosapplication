@@ -93,7 +93,7 @@ function commentsNodes(t) {
           'ul',
           { class: 'comments' },
           t.comments.map((c) => {
-            const m = member(c.author) || TEAM[0];
+            const m = member(c.author) || { id: '', name: 'Former member' };
             return el(
               'li',
               {},
@@ -274,10 +274,19 @@ function rebuildDrawer() {
   else closeDlg(drawer());
 }
 
+/** A teammate changed data: refresh the drawer, keeping the field being typed in if there is one. */
+function refreshDrawerRemote() {
+  if (!store.ui.drawerId) return;
+  const t = byId(store.state, store.ui.drawerId);
+  if (t && drawer().contains(document.activeElement)) renderDrawerParts(t);
+  else rebuildDrawer();
+}
+
 export function initDrawer() {
   const d = drawer();
   on('drawer:parts', renderDrawerParts);
   on('drawer:rebuild', rebuildDrawer);
+  on('drawer:remote', refreshDrawerRemote);
 
   d.addEventListener('close', () => {
     store.ui.drawerId = null;
