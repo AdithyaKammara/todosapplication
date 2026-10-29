@@ -16,7 +16,7 @@ The app stays a static site (GitHub Pages works); Supabase provides the database
 2. **Create the tables.** In the dashboard open **SQL Editor → New query**, paste the whole of
    [`supabase/schema.sql`](../supabase/schema.sql) and press **Run**. It is safe to run again later.
 3. **Allow your site's address.** Go to **Authentication → URL Configuration**:
-   - **Site URL**: `https://adithyakammara.github.io/todosapplication/`
+   - **Site URL**: `https://adithyakammara.github.io/taskflow/`
    - **Redirect URLs**: add the same address, plus `http://localhost:5173/` for local development.
 
    Confirmation and password-reset emails link back to these addresses.

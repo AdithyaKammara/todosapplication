@@ -2,7 +2,7 @@
 
 A team task manager with accounts, shared workspaces and live sync, built with plain HTML, CSS and JavaScript. No framework and no build step; Supabase provides sign-in, the database and realtime updates.
 
-**Live app:** https://adithyakammara.github.io/todosapplication/
+**Live app:** https://adithyakammara.github.io/taskflow/
 
 ![Dashboard in light mode](docs/screenshots/dashboard-light.png)
 
