@@ -1,102 +1,85 @@
-# 📝 Dynamic Todos Application
+# TaskFlow
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success?style=for-the-badge)](https://aditodosapp.ccbp.tech)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple?style=for-the-badge&logo=bootstrap)](https://getbootstrap.com/)
+A team task manager built with plain HTML, CSS and JavaScript. No framework, no build step.
 
-> Production-ready task manager built with vanilla JavaScript, demonstrating DOM manipulation, Local Storage API, and event-driven architecture.
+It has a dashboard, list, kanban board and calendar, plus the details that make a task tool pleasant to use: natural-language quick add, undo/redo, bulk edit, a command palette, keyboard shortcuts and light/dark themes.
 
-**[🚀 Live Demo](https://teamtaskflow.ccbp.tech/)**
+**Live demo:** https://adithyakammara.github.io/todosapplication/
 
----
+![Dashboard in light mode](docs/screenshots/dashboard-light.png)
 
-## ⚡ Key Features
+| Board, dark mode                          | Task drawer                                 | Mobile                                 |
+| ----------------------------------------- | ------------------------------------------- | -------------------------------------- |
+| ![Board](docs/screenshots/board-dark.png) | ![Drawer](docs/screenshots/task-drawer.png) | ![Mobile](docs/screenshots/mobile.png) |
 
-- ✅ Full CRUD operations (Create, Read, Update, Delete)
-- 💾 Persistent storage with Local Storage API
-- 🔄 Real-time UI updates without page reloads
-- 📱 Fully responsive design with Bootstrap 5
-- 🎯 Zero external dependencies for core logic
+## Features
 
----
+- **Dashboard**: a "Start here" table of the three tasks to look at first (ranked by due date, priority, status and progress), four key numbers, a status donut, a completion chart (7, 14 or 30 days), workload, project progress and upcoming tasks. Charts are hand-built SVG.
+- **Quick add**: type `Review PR tomorrow @priya #dev !high` and the date, assignee, tag and priority are picked out for you.
+- **Views**: list with sorting and filters, drag-and-drop board, month calendar.
+- **Task drawer**: status, priority, assignee, due date, tags, description, subtasks, comments and an activity log.
+- **Productivity**: undo/redo (50 steps), bulk move/assign/delete, command palette (`Ctrl K`), "What next?" ranking, focus timer.
+- **Data**: JSON backup and restore, CSV export (guarded against spreadsheet formula injection), data saved in the browser.
+- **Quality**: keyboard accessible, visible focus, reduced-motion support, responsive down to phones, light and dark themes, compact density option.
 
-## 🛠️ Tech Stack
+## Run it
 
-**Frontend:** HTML5 • CSS3 • Bootstrap 5  
-**Logic:** Vanilla JavaScript (ES6+)  
-**Storage:** Local Storage API
-
----
-
-## 🚀 Quick Start
+Modules do not load from `file://`, so serve the folder over HTTP:
 
 ```bash
-# Clone and run
-git clone https://github.com/AdithyaKammara/todosapplication.git
-cd todosapplication
-open index.html
+npm install     # only needed for tests, linting and formatting
+npm start       # serves http://localhost:5173 with a tiny zero-dependency server
 ```
 
----
+Or open the folder in VS Code and use the Live Server extension.
 
-## 💡 Technical Highlights
-
-**DOM Manipulation**
-```javascript
-// Dynamic element creation and real-time updates
-const todoElement = document.createElement('li');
-todoContainer.appendChild(todoElement);
-```
-
-**Data Persistence**
-```javascript
-// Client-side storage with Local Storage API
-localStorage.setItem('todosList', JSON.stringify(todosArray));
-const savedTodos = JSON.parse(localStorage.getItem('todosList')) || [];
-```
-
-**Event-Driven Architecture**
-```javascript
-// Efficient event delegation for dynamic elements
-todoContainer.addEventListener('click', handleTodoActions);
-```
-
----
-
-## 📂 Project Structure
+## Project structure
 
 ```
-todosapplication/
-├── index.html    # Main structure
-├── style.css     # Styles + Bootstrap overrides
-└── script.js     # Core application logic
+index.html
+css/        tokens, base, layout, components, views, dialogs (+ self-hosted fonts)
+src/
+  main.js         wires everything together
+  config.js       constants (statuses, priorities, demo team, limits)
+  model/          pure logic: sanitising data, quick-add parser, selectors
+  store/          state, history (undo/redo), storage, actions
+  views/          dashboard, list, board, calendar, charts, app chrome
+  ui/             drawer, dialogs, palette, shortcuts, bulk edit, theme, toast
+  features/       sample data, import/export
+  utils/          dates, text, DOM builder, CSV
+tests/            unit tests for the pure logic
+scripts/serve.mjs static dev server
 ```
 
----
+Design choices worth knowing about:
 
-## 🎯 What I Learned
+- All user text is rendered with `textContent` through a small `el()` builder, and everything read from storage or an imported file passes through `sanitize` first.
+- `store/storage.js` is the only file that touches `localStorage`. It is the seam where a `fetch()` to a real API will go.
+- Selectors and the history stack are pure functions, which is why they are easy to unit test.
 
-- JavaScript fundamentals: array methods, object manipulation, ES6+ features
-- DOM APIs: element creation, traversal, and event handling
-- Web Storage: Local Storage for client-side data persistence
-- Responsive design: mobile-first approach with Bootstrap grid
+## Scripts
 
----
+| Command                           | What it does                                 |
+| --------------------------------- | -------------------------------------------- |
+| `npm start`                       | Serve the app locally                        |
+| `npm test`                        | Run unit tests (Node's built-in test runner) |
+| `npm run lint`                    | ESLint                                       |
+| `npm run format` / `format:check` | Prettier                                     |
+| `npm run check`                   | Lint, format check and tests together        |
 
-## 🔮 Potential Enhancements
+GitHub Actions runs `check` on every push (`.github/workflows/ci.yml`) and can publish the app to GitHub Pages (`.github/workflows/pages.yml`; enable Pages with source "GitHub Actions" in the repository settings).
 
-- Task categories and filtering
-- Drag-and-drop reordering
-- Dark mode toggle
-- Backend integration with REST API
+## Honest notes
 
----
+- The team (five people) is demo data. There are no accounts yet, and data lives only in your browser.
+- This is version one of a larger plan.
 
-## 👤 Author
+## Roadmap
 
-**Adithya Kammara**  
-[GitHub](https://github.com/AdithyaKammara) • [LinkedIn](https://linkedin.com/in/adithyakammara)
+1. **Now:** polished frontend, tests, CI, deployed demo.
+2. **Next:** Node + Express + PostgreSQL API, authentication, roles and permissions, Docker.
+3. **Later:** real-time updates, notifications, audit log, reporting.
 
----
+## Credits
 
-⭐ **Star this repo if you found it helpful!**
+Font: [Figtree](https://github.com/erikdkennedy/figtree), under the SIL Open Font License (copy in `css/fonts/`). Bricolage Grotesque is still in `css/fonts/` but no longer used.

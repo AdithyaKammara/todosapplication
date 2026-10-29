@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
+*.log
+
+Claude outputs/
+
+# local-only
+_backup-v4/
+_backup-v6/
+.claude/
+.taste-skill/
