@@ -4,6 +4,7 @@
  */
 import { on } from './store/events.js';
 import { initImport } from './features/data.js';
+import { initAccount } from './ui/account.js';
 import { initBoardScroll } from './ui/board-scroll.js';
 import { initBulk } from './ui/bulk.js';
 import { initDialogs } from './ui/dialogs.js';
@@ -35,3 +36,4 @@ initImport();
 initShortcuts();
 
 render();
+initAccount();

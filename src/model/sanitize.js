@@ -57,7 +57,8 @@ export function sanitizeTask(raw) {
       .slice(-50)
       .map((c) => ({
         id: validId(c && c.id) ? c.id : uid(),
-        author: member(c && c.author) ? c.author : ME,
+        // keep authors who are no longer in the team, so their comments are not re-attributed
+        author: validId(c && c.author) ? c.author : ME,
         text: String((c && c.text) || '')
           .trim()
           .slice(0, 500),

@@ -1,14 +1,18 @@
 /**
  * Persistence layer. This is the ONLY module that reads or writes task data in localStorage.
- * `load()` and `save()` are deliberately small so they can later be replaced with fetch() calls to
- * the Node + PostgreSQL API without touching any other file.
+ * In cloud mode (Supabase configured, see src/backend/) task data lives in the workspace instead,
+ * so `load()` starts empty and `save()` leaves localStorage alone; backend/sync.js listens for the
+ * store's 'saved' event and writes the changes to the database.
  */
 import { KEYS } from '../config.js';
 import { normalize } from '../model/sanitize.js';
 
 export const storage = {
+  cloud: false,
+
   /** Loads the newest data it can find, migrating v3 -> v2 -> v1 shapes on the way. */
   load() {
+    if (this.cloud) return normalize({});
     for (const key of [KEYS.data, KEYS.v3, KEYS.v2, KEYS.v1]) {
       try {
         const raw = localStorage.getItem(key);
@@ -31,6 +35,7 @@ export const storage = {
 
   /** Returns true when the data was saved, false when storage is full or blocked. */
   save(data) {
+    if (this.cloud) return true;
     try {
       localStorage.setItem(KEYS.data, JSON.stringify(data));
       return true;

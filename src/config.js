@@ -10,6 +10,8 @@ export const KEYS = {
   theme: 'todo-app:theme',
   density: 'todo-app:density',
   view: 'todo-app:view',
+  workspace: 'todo-app:workspace',
+  invite: 'todo-app:invite',
 };
 
 export const INBOX = 'inbox';
@@ -44,8 +46,9 @@ export const PRIORITIES = ['low', 'medium', 'high'];
 export const PRIORITY_WEIGHT = { low: 1, medium: 2, high: 3 };
 
 /**
- * Demo team. Replace with real users once the backend (auth + roles) exists.
- * `ME` is the "logged in" user.
+ * The people tasks can be assigned to, and `ME`, the signed-in user. In local mode this is a demo
+ * team; with Supabase configured, `setTeam()` swaps in the members of the current workspace.
+ * Both are live bindings, so every importer sees the change.
  */
 export const TEAM = [
   { id: 'me', name: 'Adithya K', color: '#6b5bd2' },
@@ -54,7 +57,13 @@ export const TEAM = [
   { id: 'ananya', name: 'Ananya Rao', color: '#d05a8c' },
   { id: 'karthik', name: 'Karthik Reddy', color: '#3a8fb7' },
 ];
-export const ME = 'me';
+export let ME = 'me';
+
+/** Replace the team with real workspace members (`[{ id, name, color }]`) and set who "me" is. */
+export function setTeam(members, meId) {
+  TEAM.splice(0, TEAM.length, ...members);
+  ME = meId;
+}
 
 export const PROJECT_COLORS = [
   '#6b5bd2',

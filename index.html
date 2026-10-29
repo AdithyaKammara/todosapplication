@@ -14,11 +14,26 @@
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
+    <!-- shown instead of the app when Supabase is configured and nobody is signed in -->
+    <section id="auth" class="auth" aria-labelledby="authTitle" hidden>
+      <div class="auth-card">
+        <div class="brand auth-brand">
+          <span class="logo" aria-hidden="true">TF</span>
+          <span class="brand-name">TaskFlow</span>
+        </div>
+        <div id="authBody"></div>
+      </div>
+    </section>
+
     <div class="shell">
       <aside class="sidebar" id="sidebar" aria-label="Primary">
         <div class="brand">
           <span class="logo" aria-hidden="true">TF</span>
           <span class="brand-name">TaskFlow</span>
+        </div>
+        <div id="workspacePick" class="ws-pick" hidden>
+          <label class="sr-only" for="workspaceSelect">Workspace</label>
+          <select id="workspaceSelect" class="field ws-select"></select>
         </div>
         <nav id="nav" class="nav" aria-label="Views"></nav>
         <div class="side-section">
@@ -34,7 +49,9 @@
           <nav id="projectNav" class="nav" aria-label="Projects"></nav>
         </div>
         <div class="side-foot">
+          <button id="teamBtn" class="nav-item" type="button" hidden></button>
           <button id="settingsBtn" class="nav-item" type="button"></button>
+          <div id="account" class="account" hidden></div>
         </div>
       </aside>
       <button class="scrim" id="scrim" type="button" aria-label="Close menu" tabindex="-1"></button>
@@ -149,8 +166,7 @@
           <div id="view"></div>
 
           <footer class="footer">
-            TaskFlow · a frontend-first project; backend, auth, roles and audit log are on the
-            roadmap ·
+            TaskFlow · vanilla JavaScript, with optional Supabase accounts and live team sync ·
             <a href="https://github.com/AdithyaKammara" target="_blank" rel="noopener">GitHub</a> ·
             <a href="https://linkedin.com/in/adithyakammara" target="_blank" rel="noopener"
               >LinkedIn</a
@@ -275,6 +291,61 @@
           <button class="btn" type="button" data-dlg-close>Cancel</button>
         </div>
       </form>
+    </dialog>
+
+    <dialog id="teamDlg" class="modal" aria-labelledby="teamTitle">
+      <div class="dlg-inner">
+        <div class="dlg-head">
+          <h2 id="teamTitle">Team</h2>
+          <button class="icon-btn" type="button" data-dlg-close aria-label="Close team"></button>
+        </div>
+        <div class="set-group">
+          <p class="set-label">Members</p>
+          <ul id="memberList" class="member-list"></ul>
+        </div>
+        <div class="set-group">
+          <p class="set-label">Invite teammates</p>
+          <p class="muted" id="inviteHelp">
+            Anyone with the link can join this workspace for the next 7 days.
+          </p>
+          <div class="set-row">
+            <button id="inviteBtn" class="btn btn-primary" type="button">Create invite link</button>
+          </div>
+          <div id="inviteOut" class="set-row invite-out" hidden>
+            <label class="sr-only" for="inviteLink">Invite link</label>
+            <input
+              id="inviteLink"
+              class="field"
+              type="text"
+              readonly
+              aria-describedby="inviteHelp"
+            />
+            <button id="inviteCopy" class="btn" type="button">Copy</button>
+          </div>
+          <p id="inviteError" class="form-error" role="alert"></p>
+        </div>
+        <form id="newWorkspaceForm" class="set-group" novalidate>
+          <label class="set-label" for="newWorkspaceName">New workspace</label>
+          <div class="set-row">
+            <input
+              id="newWorkspaceName"
+              class="field"
+              type="text"
+              maxlength="60"
+              autocomplete="off"
+              placeholder="e.g. Design team"
+              aria-describedby="newWorkspaceError"
+            />
+            <button class="btn" type="submit">Create</button>
+          </div>
+          <p id="newWorkspaceError" class="form-error" role="alert"></p>
+        </form>
+        <div class="set-group" id="leaveGroup" hidden>
+          <div class="set-row">
+            <button id="leaveBtn" class="btn danger" type="button">Leave this workspace</button>
+          </div>
+        </div>
+      </div>
     </dialog>
 
     <dialog id="helpDlg" class="modal" aria-labelledby="helpTitle">
